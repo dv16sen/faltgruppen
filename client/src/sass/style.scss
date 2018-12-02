@@ -1,0 +1,19 @@
+//import resources
+@import "resources/mixins.scss";
+@import "resources/variables.scss";
+
+//import global
+@import "global/index.scss";
+
+//import layouts
+@import "layout/wrappers.scss";
+@import "layout/containers.scss";
+
+//import attributes
+@import "attributes/colors.scss";
+@import "attributes/headings.scss";
+@import "attributes/margins.scss";
+@import "attributes/text.scss";
+
+//import site-modules
+@import "site-modules/global.scss";

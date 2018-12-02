@@ -1,0 +1,11 @@
+{
+  "host": "localhost",
+  "port": 8080,
+  "database": {
+    "name": "test_faltgruppen",
+    "dialect": "mysql",
+    "port": 3306,
+    "username": "root",
+    "password": ""
+  }
+}
