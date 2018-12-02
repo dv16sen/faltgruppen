@@ -1,6 +1,6 @@
 ### Project Installation
-1. `git clone` this repository
-2. Install [Node.js](https://nodejs.org/en/). You can check if you have it installed by writing `node -v` in a terminal (it should be version 8 or greater).
+1. `git clone https://github.com/dv16sen/faltgruppen.git`
+2. Install [Node.js](https://nodejs.org/en/) if you don't have it already. You can check if you have it installed by writing `node -v` in a terminal (it should be version 8 or greater).
 3. `npm run init` (can take several minutes)
 4. Install [XAMPP](https://www.apachefriends.org/index.html)
 
@@ -33,7 +33,7 @@
 | `npm run init`            | Will install all packages for both the server and the client. |
 | `npm run dev`             | Starts both the server and the client in development mode. |
 | `npm run start`           | Starts the server in production mode and tells it to serve `client/build/index.html` |
-| `npm run build`           | Builds the client for production to the `client/build` folder.<br> It correctly bundles React in production mode and optimizes the build for the best performance.<br> The build is minified and the filenames include the hashes.<br> See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information. |
+| `npm run build`           | Builds the client for production to the `client/build` folder.<br> The build is minified and the filenames include the hashes.<br> See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information. |
 | `npm run test`            | Runs all tests in both the server and the client. |
 | `npm run startServer`     | Runs the server in the development mode.<br> The server will restart if you make edits under the server folder.<br> |
 | `npm run testServer`      | Runs all tests under `server/test` |
