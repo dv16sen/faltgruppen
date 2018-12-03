@@ -14,17 +14,18 @@ export default (routes, defaultState = {}) => (WrappedComponent) => {
                 axios.get(routes[routeKey])
                     .then(res => ({[routeKey]: res.data}))
             )
-        ).then(data => data.reduce((acc, next) => ({...acc, ...next})));
+        ).then(data => data.reduce((acc, next) => ({...acc, ...next})))
+            .then(data => {
+                if(this.mounted){
+                    this.setState(data);
+                }
+            });
 
         async componentDidMount() {
             this.mounted = true;
 
             try {
-                const data = await this.fetchApiData();
-
-                if(this.mounted){
-                    this.setState(data);
-                }
+                await this.fetchApiData();
             } catch(err){
                 console.error(err);
             }
@@ -35,7 +36,13 @@ export default (routes, defaultState = {}) => (WrappedComponent) => {
         }
 
         render() {
-            return <WrappedComponent {...this.state} {...this.props}/>;
+            return (
+                <WrappedComponent
+                    updateApiData={this.fetchApiData}
+                    {...this.state}
+                    {...this.props}
+                />
+            );
         }
     };
 };

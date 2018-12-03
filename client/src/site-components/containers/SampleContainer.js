@@ -12,8 +12,11 @@ class SampleContainer extends Component {
         onSampleChange: toggleSample(props)
     }));
 
+    filterOutExtraProps = ({updateApiData, ...props}) => props;
+
     render() {
-        return childrenWithProps(this.props);
+
+        return childrenWithProps(this.filterOutExtraProps(this.props));
     }
 }
 
