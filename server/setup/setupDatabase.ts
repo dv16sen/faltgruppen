@@ -44,9 +44,9 @@ const createSequelizeFromUrl = async () => {
     const sequelize = new Sequelize(url);
     sequelize.addModels([`${__dirname}/../models/*.ts`]);
     await sequelize.sync();
-    const sampleRes = await sequelize.models.Sample.findAll();
+    const eventRes = await sequelize.models.Event.findAll();
 
-    if(sampleRes.length === 0){
+    if(eventRes.length === 0){
         await loadDefaultData(sequelize);
     }
 

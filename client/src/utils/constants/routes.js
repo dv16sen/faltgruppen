@@ -1,5 +1,5 @@
 export const routes = {
-    eventPage: "/event",
+    addEventPage: "/addEvent",
     homePage: "/",
 
 };

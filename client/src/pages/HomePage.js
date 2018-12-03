@@ -1,19 +1,19 @@
 import React from "react";
 import {Page} from "../site-components/views/Page";
-import SampleContainer from "../site-components/containers/SampleContainer";
-import {SampleView} from "../site-components/views/SampleView";
 import {Link} from "react-router-dom";
 import {routes} from "../utils/constants/routes";
 import {Button, Icon} from "semantic-ui-react";
+import EventContainer from "../site-components/containers/EventContainer";
+import {EventView} from "../site-components/views/EventView";
 
 export const HomePage = () => (
     <Page id="home-page" className="wrapper-4 pt-15">
-        <SampleContainer>
-            <SampleView/>
-        </SampleContainer>
-        <Link to={routes.eventPage}>
+        <EventContainer>
+            <EventView/>
+        </EventContainer>
+        <Link to={routes.addEventPage}>
             <Button icon floated="right" labelPosition='right'>
-                Se event
+                Lägg till event
                 <Icon name='right arrow' />
             </Button>
         </Link>

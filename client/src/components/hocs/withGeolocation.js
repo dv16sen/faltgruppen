@@ -49,15 +49,11 @@ export default (geolocationOptions = {}) => (WrappedComponent) => (
             }
         };
 
-        useGeolocation = (functionName, options) => {
-            this.geolocationOptions = {...this.geolocationOptions, ...options};
-
-            return navigator.geolocation[functionName](
-                this.handleSuccess,
-                this.handleError,
-                this.geolocationOptions
-            );
-        };
+        useGeolocation = (functionName, options) => navigator.geolocation[functionName](
+            this.handleSuccess,
+            this.handleError,
+            {...this.geolocationOptions, ...options}
+        );
 
         watchPosition = (options = {}) => {
             return this.useGeolocation("watchPosition", options);
