@@ -1,5 +1,6 @@
 import {expect} from "chai";
 import {startApp} from "../../setup/startApp";
+import {setupDatabase} from "../../setup/setupDatabase";
 import http from "http";
 import {routes} from "../../utils/constants/routes";
 import request, {Response} from "supertest";
@@ -16,19 +17,67 @@ const checkSuccess = (response: Response) => {
 };
 
 before(async () => {
-    const app = await startApp(settings);
+    sequelize = await setupDatabase(settings.database);
+    await sequelize.query(`DROP DATABASE ${settings.database.name}`);
+    await sequelize.close();
+
+    let app = await startApp(settings);
     server = app.server;
     sequelize = app.sequelize;
 });
 
-describe("Routes", () => {
+describe("Routes", function(){
     it("Should successfully GET all gettable routes.", () => {
         const gettableRoutes = [
-            routes.sample
+            routes.sample,
+            routes.event
         ];
 
         return Promise.all(gettableRoutes.map(route => request(server).get(route)))
             .then(responses => responses.forEach(checkSuccess));
+    });
+
+    describe(routes.event, () => {
+        it("Should add valid event", () => {
+            return request(server)
+                .post(routes.event)
+                .send({gender: "Kille", location: "bar", measure: "foo"})
+                .then(checkSuccess);
+        });
+
+        it("Should get event based on query", () => {
+            return request(server)
+                .get(routes.event)
+                .query({
+                    where: {
+                        location: "bar"
+                    }
+                })
+                .then(checkSuccess);
+        });
+
+        it("Should update event based on query", () => {
+            return request(server)
+                .put(routes.event)
+                .send({location: "foobar"})
+                .query({
+                    where: {
+                        location: "bar"
+                    }
+                })
+                .then(checkSuccess);
+        });
+
+        it("Should delete event based on query", () => {
+            return request(server)
+                .del(routes.event)
+                .query({
+                    where: {
+                        id: 1
+                    }
+                })
+                .then(checkSuccess);
+        });
     });
 });
 

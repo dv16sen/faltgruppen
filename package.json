@@ -47,7 +47,7 @@
     "build": "cd client && npm run build",
     "test": "concurrently \"npm run testServer\" \"npm run testClient\"",
     "startServer": "nodemon",
-    "testServer": "cross-env NODE_ENV=test ts-mocha server/test/**/*.ts",
+    "testServer": "cross-env NODE_ENV=test ts-mocha server/test/**/*.ts --timeout 10000",
     "startClient": "cd client && npm run start",
     "testClient": "cd client && npm run test",
     "updateRoutes": "ts-node scripts.ts updateRoutes",
