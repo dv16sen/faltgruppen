@@ -16,7 +16,7 @@ const checkSuccess = (response: Response) => {
 };
 
 before(async () => {
-    const app = await startApp(settings.database);
+    const app = await startApp(settings);
     server = app.server;
     sequelize = app.sequelize;
 });
