@@ -16,6 +16,11 @@ const checkSuccess = (response: Response) => {
     expect(response.status).to.be.equal(httpCodes.SUCCESS);
 };
 
+const checkBadRequest = () => (response: Response) => {
+    console.log(response.text);
+    expect(response.status).to.be.equal(httpCodes.BAD_REQUEST);
+};
+
 before(async () => {
     sequelize = await setupDatabase(settings.database);
     await sequelize.query(`DROP DATABASE ${settings.database.name}`);
@@ -43,6 +48,13 @@ describe("Routes", function(){
                 .post(routes.event)
                 .send({gender: "Kille", location: "bar", measure: "foo"})
                 .then(checkSuccess);
+        });
+
+        it("Should not add event with empty location or measure", () => {
+            return request(server)
+                .post(routes.event)
+                .send({gender: "Kille", location: "", measure: ""})
+                .then(checkBadRequest);
         });
 
         it("Should get event based on query", () => {
