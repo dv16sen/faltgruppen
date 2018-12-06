@@ -1,6 +1,6 @@
 import {actionTypes} from "./actionTypes";
 
-export const sampleAction = (string) => ({
-    type: actionTypes.sampleAction,
-    payload: string
+export const updateEvents = (events) => ({
+    type: actionTypes.updateEvents,
+    payload: events
 });

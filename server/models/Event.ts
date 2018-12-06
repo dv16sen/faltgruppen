@@ -1,6 +1,6 @@
 import {Column, Model, Table} from "sequelize-typescript";
 
-@Table
+@Table({timestamps: true})
 export default class Event extends Model<Event> {
     @Column({
         allowNull: false,

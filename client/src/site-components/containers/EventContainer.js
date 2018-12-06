@@ -1,107 +1,92 @@
 import {Component} from "react";
-import {apiRoutes} from "../../utils/constants/apiRoutes";
-import withApiData from "../../components/hocs/withApiData";
-import {childrenWithProps} from "../../utils";
-import axios from "axios";
+import {compose} from "redux";
+import {connect} from "react-redux";
+import {bindDispatchToActionCreators, childrenWithProps} from "../../utils";
+import withValidation from "../../components/hocs/withValidation";
+import {getEventErrors, validationActions} from "../../utils/validation";
+import {fetchAndUpdateEvents} from "../../redux/actionCreators";
+import {eventApi} from "../../utils/api";
+import {prettifyError} from "../../utils/prettifyError";
+import {validationProps} from "../types/validationProps";
 
 class EventContainer extends Component {
-    state = {
-        errors: [],
-        loading: false,
-        success: false
-    };
+    static propTypes = validationProps;
+    static mapStateToProps = ({events}) => ({entries: events});
+    static mapDispatchToProps = bindDispatchToActionCreators((props) => ({
+        updateEvents: fetchAndUpdateEvents(props)
+    }));
 
-    setHandlingEventState = () => this.setState({
-        errors: [],
-        loading: true,
-        success: false
-    });
+    componentDidMount(){
+        this.props.updateEvents()
+            .catch(err => this.setErrorState([prettifyError(err)]));
+    }
 
-    setSuccessState = () => this.setState({
-        loading: false,
-        success: true
-    });
-
-    setErrorState = (errors) => this.setState({
-        loading: false,
-        errors
-    });
-
-    isValidEvent = ({gender, location, measure}) => {
-        let errors = [];
-
-        if(!gender){
-            errors.push("Ett kön måste anges");
-        }
-
-        if(!location){
-            errors.push("En plats måste anges");
-        }
-
-        if(!measure){
-            errors.push("En åtgärd måste anges");
-        }
+    isValidEvent = (event) => {
+        const errors = getEventErrors(event);
 
         if(errors.length > 0){
-            this.setErrorState(errors);
+            this.props.validation.setErrorState(errors);
             return false;
         }
 
         return true;
     };
 
-    handleEventResponse = async (promise) => {
-        return promise
-            .then(() => this.props.updateApiData())
-            .then(() => this.setSuccessState())
-            .catch(err => this.setErrorState([err.toString()]));
+    handleEventResponse = async (eventPromise, action) => {
+        return eventPromise
+            .then(() => this.props.updateEvents())
+            .then(() => this.props.validation.setCompletedActionState({
+                completedAction: action
+            }))
+            .catch(err => this.setErrorState([prettifyError(err)]));
     };
 
     addEvent = async (event) => {
         if(this.isValidEvent(event)){
-            this.setHandlingEventState();
-
+            this.props.validation.setLoadingState();
             return this.handleEventResponse(
-                axios.post(apiRoutes.event, event)
+                eventApi.insert(event),
+                validationActions.addEvent
             );
         }
     };
 
-    updateEvent = async (id, event) => {
+    updateEvent = async (id, changes) => {
+        this.props.validation.setLoadingState();
         return this.handleEventResponse(
-            axios({
-                method: "PUT",
-                url: apiRoutes.event,
-                data: event,
-                params: {where: {id}}
-            })
-        )
-    };
-
-    deleteEvent = async (id) => {
-        this.setHandlingEventState();
-
-        return this.handleEventResponse(
-            axios.delete(apiRoutes.event, {params: {where: {id}}})
+            eventApi.update(changes, {where: {id}}),
+            validationActions.updateEvent
         );
     };
 
-    filterOutExtraProps = ({updateApiData, ...props}) => props;
+    deleteEvent = async (id) => {
+        this.props.validation.setLoadingState();
+        return this.handleEventResponse(
+            eventApi.delete({where: {id}}),
+            validationActions.deleteEvent
+        );
+    };
+
+    filterExtraProps = ({updateEvents, ...props}) => props;
 
     render(){
-        const {children, ...props} = this.filterOutExtraProps(this.props);
+        const {children, validation, ...props} = this.filterExtraProps(this.props);
 
         return childrenWithProps({
             children,
-            eventProps: {
-                ...props,
-                ...this.state,
-                onAddEvent: this.addEvent,
-                onUpdateEvent: this.updateEvent,
-                onDeleteEvent: this.deleteEvent
-            }
+            events: {
+                onAdd: this.addEvent,
+                onUpdate: this.updateEvent,
+                onDelete: this.deleteEvent,
+                ...validation.state,
+                ...props
+            },
+            key: this.props.entries.length
         });
     }
 }
 
-export default withApiData({events: apiRoutes.event})(EventContainer);
+export default compose(
+    connect(EventContainer.mapStateToProps, EventContainer.mapDispatchToProps),
+    withValidation
+)(EventContainer);

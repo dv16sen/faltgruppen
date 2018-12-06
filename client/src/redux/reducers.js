@@ -2,12 +2,12 @@ import {actionTypes} from "./actionTypes";
 import {combineReducers} from "redux";
 
 export const initialState = {
-    sample: "This is a sample redux state"
+    events: []
 };
 
-export const sample = (state = "", action) => {
+export const events = (state = [], action) => {
     switch(action.type){
-    case actionTypes.sampleAction:
+    case actionTypes.updateEvents:
         return action.payload;
     default:
         return state;
@@ -15,5 +15,5 @@ export const sample = (state = "", action) => {
 };
 
 export default combineReducers({
-    sample
+    events
 });

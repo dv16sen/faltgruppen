@@ -1,6 +1,8 @@
 import React, {Component} from "react";
+import axios from "axios";
+import {prettifyError} from "../../utils/prettifyError";
 
-export default (geolocationOptions = {}) => (WrappedComponent) => (
+export default (googleApiKey, geolocationOptions = {}) => (WrappedComponent) => (
     class Geolocation extends Component {
         static defaultOptions = {
             enableHighAccuracy: true,
@@ -21,20 +23,32 @@ export default (geolocationOptions = {}) => (WrappedComponent) => (
                 available: null,
                 position: null,
                 error: null,
+                geocode: {
+                    results: []
+                },
                 getCurrentPosition: this.getCurrentPosition,
                 watchPosition: this.watchPosition,
                 clearWatch: this.clearWatch
             };
         }
 
-        handleSuccess = (position) => {
+        handleSuccess = async (position) => {
             if(!this.mounted) return;
 
-            this.setState({
-                loading: false,
-                available: true,
-                position
-            });
+            return axios.get(
+                `https://maps.googleapis.com/maps/api/geocode/json` +
+                `?latlng=${position.coords.latitude},${position.coords.longitude}` +
+                `&key=${googleApiKey}`
+            ).then(res => res.data).then(geocode => {
+                if(this.mounted){
+                    this.setState({
+                        loading: false,
+                        available: true,
+                        position,
+                        geocode
+                    });
+                }
+            }).catch(this.handleError);
         };
 
         handleError = (err) => {
@@ -43,7 +57,7 @@ export default (geolocationOptions = {}) => (WrappedComponent) => (
             if(this.mounted){
                 this.setState({
                     available: true,
-                    error: err,
+                    error: prettifyError(err),
                     loading: false
                 });
             }

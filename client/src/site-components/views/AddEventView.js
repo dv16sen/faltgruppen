@@ -1,7 +1,12 @@
 import React, {Component} from "react";
 import {Button, Dropdown, Form, Message, Segment, TextArea} from "semantic-ui-react";
+import {validationActions} from "../../utils/validation";
+import GeolocationView from "./GeolocationView";
+import {eventProps} from "../types/eventProps";
 
-export default class AddEventView extends Component {
+class AddEventView extends Component {
+    static propTypes = eventProps;
+
     state = {
         gender: "Kille",
         location: "",
@@ -20,7 +25,12 @@ export default class AddEventView extends Component {
         measure: event.target.value
     });
 
-    renderErrors = (errors) => {
+    handleSubmit = (event) => {
+        event.preventDefault();
+        this.props.events.onAdd(this.state);
+    };
+
+    static renderMessage({errors, completedAction}){
         if(errors.length > 0){
             return (
                 <Message
@@ -29,11 +39,7 @@ export default class AddEventView extends Component {
                     list={errors}
                 />
             );
-        }
-    };
-
-    renderSuccess = (success) => {
-        if(success){
+        } else if(completedAction === validationActions.addEvent){
             return (
                 <Message
                     success
@@ -41,27 +47,30 @@ export default class AddEventView extends Component {
                 />
             );
         }
+    }
+
+    focusMeasureFieldOnEnter = (event) => {
+        if(event.key === "Enter"){
+            event.preventDefault();
+            this.measureField.focus();
+        }
     };
 
     render(){
-        const {
-            eventProps,
-            ...props
-        } = this.props;
-        const {onAddEvent, loading, errors, success} = eventProps;
+        const {events, children, ...props} = this.props;
+        const {loading} = events;
+        const {gender, location, measure} = this.state;
 
         return (
             <Segment>
-                <h2 className="ui header">Lägg till event</h2>
-                {this.renderErrors(errors)}
-                {this.renderSuccess(success)}
+                <h2 className="ui header">Lägg till händelse</h2>
                 <Form {...props}>
                     <Form.Field>
                         <label>Kön</label>
                         <Dropdown
                             selection
                             disabled={loading}
-                            value={this.state.gender}
+                            value={gender}
                             options={[{
                                 text: "Kille",
                                 value: "Kille"
@@ -76,27 +85,38 @@ export default class AddEventView extends Component {
                         <label>Plats</label>
                         <input
                             type="text"
-                            value={this.state.location}
+                            value={location}
                             disabled={loading}
+                            onKeyPress={this.focusMeasureFieldOnEnter}
                             onChange={this.handleLocationChange}
                         />
                     </Form.Field>
                     <Form.Field>
+                        <label>Din nuvarande plats</label>
+                        <GeolocationView/>
+                    </Form.Field>
+                    <Form.Field>
                         <label>Åtgärd</label>
                         <TextArea
-                            value={this.state.measure}
+                            value={measure}
                             disabled={loading}
+                            ref={measureField => this.measureField = measureField}
                             onChange={this.handleMeasureChange}
                         />
                     </Form.Field>
+                    {AddEventView.renderMessage(events)}
                     <Button
                         primary
+                        fluid
                         disabled={loading}
                         loading={loading}
-                        onClick={() => onAddEvent(this.state)}
+                        onClick={this.handleSubmit}
                     >Lägg till</Button>
                 </Form>
+                {children}
             </Segment>
         );
     }
 }
+
+export default AddEventView;

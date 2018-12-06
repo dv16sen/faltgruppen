@@ -1,0 +1,11 @@
+.ui {
+    &.form {
+        .message {
+            &.error,
+            &.success,
+            &.warning {
+                display: block;
+            }
+        }
+    }
+}

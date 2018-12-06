@@ -1,12 +1,6 @@
-import {sampleAction} from "./actions";
+import {updateEvents} from "./actions";
+import {eventApi} from "../utils/api";
 
-export const toggleSample = (props) => () => (dispatch, getState) => {
-    console.table(props);
-    const {sample} = getState();
-
-    if(sample === "This is a sample redux state"){
-        dispatch(sampleAction("State changed!"));
-    } else {
-        dispatch(sampleAction("This is a sample redux state"));
-    }
+export const fetchAndUpdateEvents = () => () => async (dispatch) => {
+    return eventApi.get().then(events => dispatch(updateEvents(events)));
 };

@@ -81,13 +81,6 @@ const createSequelizeConfig = (databaseOptions: DatabaseOptions): SequelizeConfi
             $lte: Op.lte,
             $like: Op.like
         },
-        define: {
-            defaultScope: {
-                attributes: {
-                    exclude: ["createdAt", "updatedAt"]
-                }
-            }
-        },
         logging: (constants.isTest || constants.isProduction) ? false : console.log
     };
 };

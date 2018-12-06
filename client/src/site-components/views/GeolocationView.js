@@ -1,13 +1,19 @@
-import React from "react";
+import React, {PureComponent, Fragment} from "react";
+import {Loader, Message} from "semantic-ui-react";
+import {GoogleMap} from "./GoogleMap";
+import {apiKeys} from "../../utils/constants/apiKeys";
 import withGeolocation from "../../components/hocs/withGeolocation";
-import {Message, Segment} from "semantic-ui-react";
+import {geolocationProps} from "../../components/types/geolocationProps";
 
-const GeolocationView = ({geolocation, ...props}) => {
-    const renderGeolocation = () => {
-        const {loading, available, error, position} = geolocation;
+class GeolocationView extends PureComponent {
+    static propTypes = geolocationProps;
+
+    render(){
+        const {geolocation, ...props} = this.props;
+        const {geocode, loading, available, error, position} = geolocation;
 
         if(loading){
-            return null;
+            return <Loader active inline/>;
         } else if(!available){
             return (
                 <Message
@@ -20,36 +26,39 @@ const GeolocationView = ({geolocation, ...props}) => {
                 <Message
                     error
                     header="Something went wrong when fetching your position"
+                    list={[error]}
                 />
             );
         }
 
         return (
-            <table className="ui unstackable definition table">
-                <tbody>
-                <tr>
-                    <td>Latitude:</td>
-                    <td>{position.coords.latitude}</td>
-                </tr>
-                <tr>
-                    <td>Longitude:</td>
-                    <td>{position.coords.longitude}</td>
-                </tr>
-                <tr>
-                    <td>Accuracy:</td>
-                    <td>{position.coords.accuracy}</td>
-                </tr>
-                </tbody>
-            </table>
+            <Fragment>
+                <table className="ui unstackable definition table" {...props}>
+                    <tbody>
+                    <tr>
+                        <td>Latitude:</td>
+                        <td>{position.coords.latitude}</td>
+                    </tr>
+                    <tr>
+                        <td>Longitude:</td>
+                        <td>{position.coords.longitude}</td>
+                    </tr>
+                    <tr>
+                        <td>Accuracy:</td>
+                        <td>{position.coords.accuracy}</td>
+                    </tr>
+                    {geocode.results.map((result, i) => (
+                        <tr key={i}>
+                            <td>{result.types[0]}:</td>
+                            <td>{result.formatted_address}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                <GoogleMap position={position}/>
+            </Fragment>
         );
-    };
+    }
+}
 
-    return (
-        <Segment loading={geolocation.loading} {...props}>
-            <h2 className="ui header">Your position</h2>
-            {renderGeolocation()}
-        </Segment>
-    );
-};
-
-export default withGeolocation()(GeolocationView);
+export default withGeolocation(apiKeys.googleMap)(GeolocationView);

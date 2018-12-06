@@ -34,7 +34,6 @@ before(async () => {
 describe("Routes", function(){
     it("Should successfully GET all gettable routes.", () => {
         const gettableRoutes = [
-            routes.sample,
             routes.event
         ];
 
