@@ -6,7 +6,6 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-server/settings.json
 
 # Generated files
 .idea/**/contentModel.xml
