@@ -6,6 +6,7 @@ $secondary : #1b1c1d;
 $white     : #ffffff;
 $black     : #000000;
 $gray      : #f7f7f7;
+$lighterGray: #f8f8f8;
 
 //----------------------------------------------
 // Semantic UI Colors
@@ -24,6 +25,7 @@ $uiGray    : #767676;
 $uiBrown   : #a5673f;
 $uiViolet  : #6435c9;
 $uiBlack   : #1b1c1d;
+$uiDark    : rgba(0,0,0,.6);
 
 //----------------------------------------------
 // Color Maps
@@ -32,6 +34,7 @@ $darkColors: (
     (primary   $primary)
     (secondary $secondary)
     (black     $uiBlack)
+    (ui-dark   $uiDark)
     (ui-blue   $uiBlue)
     (ui-green  $uiGreen)
     (ui-yellow $uiYellow)
@@ -51,6 +54,7 @@ $darkColors: (
 $lightColors: (
     (white $white)
     (gray  $gray)
+    (lighter-gray $lighterGray)
 );
 
 $colors: join($darkColors, $lightColors);

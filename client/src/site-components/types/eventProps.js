@@ -7,6 +7,8 @@ export const eventProps = {
         onUpdate: PropTypes.func.isRequired,
         onDelete: PropTypes.func.isRequired,
         entries: PropTypes.array.isRequired,
+        locations: PropTypes.array.isRequired,
+        eventToEdit: PropTypes.object,
         ...validationProps.validation.state
     })
 };

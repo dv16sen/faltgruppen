@@ -8,3 +8,7 @@ export const childrenWithProps = ({children, ...props}) => {
 export const bindDispatchToActionCreators = (getActionCreators) => {
     return (dispatch, props) => bindActionCreators(getActionCreators(props), dispatch);
 };
+
+export const removeDuplicates = (list) => {
+    return list.filter((value, key) => list.indexOf(value) === key);
+};

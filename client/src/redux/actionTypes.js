@@ -1,3 +1,4 @@
 export const actionTypes = {
-    updateEvents: "updateEvents"
+    updateEvents: "updateEvents",
+    editEvent: "editEvent"
 };

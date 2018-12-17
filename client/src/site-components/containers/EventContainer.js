@@ -1,7 +1,7 @@
 import {Component} from "react";
 import {compose} from "redux";
 import {connect} from "react-redux";
-import {bindDispatchToActionCreators, childrenWithProps} from "../../utils";
+import {bindDispatchToActionCreators, childrenWithProps, removeDuplicates} from "../../utils";
 import withValidation from "../../components/hocs/withValidation";
 import {getEventErrors, validationActions} from "../../utils/validation";
 import {fetchAndUpdateEvents} from "../../redux/actionCreators";
@@ -11,14 +11,18 @@ import {validationProps} from "../types/validationProps";
 
 class EventContainer extends Component {
     static propTypes = validationProps;
-    static mapStateToProps = ({events}) => ({entries: events});
+    static mapStateToProps = ({events, editEvent}) => ({
+        entries: events,
+        locations: removeDuplicates(events.map(event => event.location)),
+        eventToEdit: events.filter(event => event.id === editEvent)[0]
+    });
     static mapDispatchToProps = bindDispatchToActionCreators((props) => ({
         updateEvents: fetchAndUpdateEvents(props)
     }));
 
     componentDidMount(){
         this.props.updateEvents()
-            .catch(err => this.setErrorState([prettifyError(err)]));
+            .catch(err => this.props.validation.setErrorState([prettifyError(err)]));
     }
 
     isValidEvent = (event) => {
@@ -38,7 +42,7 @@ class EventContainer extends Component {
             .then(() => this.props.validation.setCompletedActionState({
                 completedAction: action
             }))
-            .catch(err => this.setErrorState([prettifyError(err)]));
+            .catch(err => this.props.validation.setErrorState([prettifyError(err)]));
     };
 
     addEvent = async (event) => {

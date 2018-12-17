@@ -8,4 +8,39 @@
             }
         }
     }
+
+    &.feed {
+        > .event {
+            padding: 1em;
+            border-bottom: 1px solid rgba(34,36,38,.15);
+
+            > .label {
+                display: flex;
+                align-items: center;
+
+                + .content {
+                    margin: 0;
+                }
+            }
+
+            > .content {
+                > .summary {
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+
+            &:first-child {
+                padding-top: 1em;
+            }
+
+            &:last-child {
+                padding-bottom: 1em;
+            }
+
+            .icon {
+                width: inherit;
+            }
+        }
+    }
 }

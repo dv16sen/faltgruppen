@@ -1,4 +1,5 @@
 import {Column, Model, Table} from "sequelize-typescript";
+import {DataType} from "sequelize-typescript";
 
 @Table({timestamps: true})
 export default class Event extends Model<Event> {
@@ -13,6 +14,9 @@ export default class Event extends Model<Event> {
     @Column({allowNull: false})
     location: string;
 
-    @Column({allowNull: false})
+    @Column({
+        type: DataType.TEXT,
+        allowNull: false
+    })
     measure: string;
 }

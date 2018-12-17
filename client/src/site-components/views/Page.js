@@ -1,7 +1,7 @@
 import React from "react";
 
 export const Page = ({children, ...props}) => (
-    <main {...props}>
+    <section className="wrapper-4" {...props}>
         {children}
-    </main>
+    </section>
 );

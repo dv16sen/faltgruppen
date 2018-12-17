@@ -1,3 +1,54 @@
 body {
     background-color: $gray;
 }
+
+.input-with-icon {
+    display: flex;
+    align-items: center;
+
+    > div {
+        flex: 1;
+    }
+
+    .icon {
+        flex: 0;
+        margin-left: 15px;
+    }
+}
+
+.sticky {
+    position: sticky!important;
+    top: 0;
+    z-index: 9999;
+}
+
+.icon-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateY(25%);
+
+    .icon {
+        color: $uiBlack;
+        margin-right: 10px;
+        cursor: pointer;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &:hover {
+            color: $primary;
+        }
+    }
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+@media (min-width: $mediaXSmall) {
+    body {
+        padding-top: 15px;
+    }
+}

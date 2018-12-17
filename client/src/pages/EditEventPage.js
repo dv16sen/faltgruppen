@@ -1,13 +1,13 @@
 import React from "react";
 import {Page} from "../site-components/views/Page";
 import EventContainer from "../site-components/containers/EventContainer";
-import AddEventView from "../site-components/views/AddEventView";
+import EditEventView from "../site-components/views/EditEventView";
 import {ToHomePage} from "../site-components/views/ToHomePage";
 
-export const AddEventPage = () => (
+export const EditEventPage = () => (
     <Page id="event-page">
         <EventContainer>
-            <AddEventView/>
+            <EditEventView/>
         </EventContainer>
         <ToHomePage/>
     </Page>
