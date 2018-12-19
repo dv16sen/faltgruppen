@@ -69,7 +69,7 @@ class EventForm extends Component {
 
         const userGeocode = geolocation.geocode.results[0];
         const userLocation = (userGeocode && userGeocode.formatted_address)
-            ? userGeocode.formatted_address.split(" ")[0]
+            ? userGeocode.formatted_address.split(", ")[0]
             : null;
 
         return (userLocation && locationOptions
